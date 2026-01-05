@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import sys
 
-# Configuration
+
 # Go to the blender studio website. 
 # Open developer tools (F12)
 # Go to the network tab
@@ -15,8 +15,10 @@ USER_COOKIE = "cf_clearance=q0n1jLjhBHVbwdQJWGILLgZk78TJK7B4SlRtU_qWph8-17665904
 
 BASE_URL = "https://studio.blender.org"
 # User requested URL
-GALLERY_URL = "https://studio.blender.org/projects/charge/3a6732058f6cb4/"
-DOWNLOAD_DIR = "data/charge/asset_development"
+GALLERY_URL = "https://studio.blender.org/projects/wing-it/3c402f7c9ab362/"
+# Automatically extract project name from GALLERY_URL
+PROJECT_NAME = GALLERY_URL.split('/projects/')[1].split('/')[0]
+DOWNLOAD_DIR = "cg-production-data/shows/wing_it/press/"
 
 def get_soup(url, session):
     try:
@@ -113,7 +115,7 @@ def visit_gallery(url, session, current_path, visited):
         # Check if it looks like a project gallery link
         # Recursion logic: if it starts with /projects/spring/ and not 'gallery' (if avoiding main gallery)
         # But wait, original request was a sub-page.
-        if '/projects/charge/' in full_folder_url and 'download-source' not in full_folder_url:
+        if f'/projects/{PROJECT_NAME}/' in full_folder_url and 'download-source' not in full_folder_url:
              # Try to get a folder name
              title_el = card.find(class_='cards-item-title')
              folder_name = title_el.get_text(strip=True) if title_el else link.get_text(strip=True)

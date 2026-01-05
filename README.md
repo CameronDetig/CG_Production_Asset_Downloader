@@ -9,8 +9,8 @@ This script is used to batch download assets from Blender Studio. While their as
 3. Set the DOWNLOAD_DIR to the directory you want to download assets to.
 4. Run the script.
 
+![USER_COOKIE](images/user_cookie.png)
 
-
-## Disclaimer
+### Disclaimer
 
 This script is not affiliated with Blender or Blender Studio. All assets downloaded are created by Blender Studio.
