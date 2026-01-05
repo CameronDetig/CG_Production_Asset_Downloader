@@ -1,4 +1,4 @@
-/data
+cg-production-data/
 .DS_store
 .env
 .venv
