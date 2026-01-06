@@ -15,10 +15,10 @@ USER_COOKIE = "cf_clearance=q0n1jLjhBHVbwdQJWGILLgZk78TJK7B4SlRtU_qWph8-17665904
 
 BASE_URL = "https://studio.blender.org"
 # User requested URL
-GALLERY_URL = "https://studio.blender.org/projects/wing-it/3c402f7c9ab362/"
+GALLERY_URL = "https://studio.blender.org/projects/caminandes-3/574c4c58c379cf189c1fa1c4/"
 # Automatically extract project name from GALLERY_URL
 PROJECT_NAME = GALLERY_URL.split('/projects/')[1].split('/')[0]
-DOWNLOAD_DIR = "cg-production-data/shows/wing_it/press/"
+DOWNLOAD_DIR = "cg-production-data/shows/caminandes_llamigos/vr_demo/"
 
 def get_soup(url, session):
     try:

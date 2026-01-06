@@ -22,8 +22,7 @@ def lambda_handler(event, context):
 
         print(f"Processing zip file: s3://{bucket}/{key}")
         
-        # 1. Download to RAM (User Preference)
-        # WARNING: an 8GB file requires ~10GB Lambda Function Memory to be safe.
+        # 1. Download to RAM 
         print(f"Downloading {key} into memory...")
         response = s3.get_object(Bucket=bucket, Key=key)
         zip_content = response['Body'].read()
