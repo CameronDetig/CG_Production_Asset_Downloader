@@ -2,7 +2,10 @@
 
 ## Auto-Unzipping with AWS Lambda
 
-To automatically unzip .zip files when they land in your bucket:
+This is a tool to automatically unzip .zip files when they are uploaded to an S3 bucket.
+The production files from Blender Studio are often zipped, and to cut down on the amount of data that needs to be transferred to s3, we can keep them zipped for the upload and then unzip them once they get to the bucket.
+
+### Setup
 
 1. Create a role for the lamda function:
 
@@ -39,4 +42,4 @@ Use the provided script to upload your assets to an S3 bucket.
     - bucket: The name of your S3 bucket.
     - --dir: Local directory to upload (default: spring_assets).
 
-### Test: Upload a zip file. It should disappear and be replaced by a folder filename/ containing the contents.
+### Upload a zip file. It should disappear and be replaced by a folder filename/ containing the contents.
