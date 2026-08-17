@@ -18,6 +18,7 @@ USER_COOKIE = os.environ.get("USER_COOKIE")
 if not USER_COOKIE:
     print("Error: USER_COOKIE is not set. Copy .env.example to .env and fill in USER_COOKIE.")
     sys.exit(1)
+assert USER_COOKIE is not None
 
 BASE_URL = "https://studio.blender.org"
 
@@ -115,7 +116,6 @@ def visit_gallery(url, session, current_path, visited, project_name):
         
         # Check if it looks like a project gallery link
         # Recursion logic: if it starts with /projects/spring/ and not 'gallery' (if avoiding main gallery)
-        # But wait, original request was a sub-page.
         if f'/projects/{project_name}/' in full_folder_url and 'download-source' not in full_folder_url:
              # Try to get a folder name
              title_el = card.find(class_='cards-item-title')
@@ -147,6 +147,7 @@ def main():
     project_name = gallery_url.split('/projects/')[1].split('/')[0]
     download_dir = args.download_dir or f"cg-production-data/{project_name}/"
 
+    assert USER_COOKIE is not None
     print("Starting script...")
     session = requests.Session()
     session.headers.update({
