@@ -35,7 +35,15 @@ def lambda_handler(event, context):
             for filename in z.namelist():
                 if filename.endswith('/'):
                     continue
-                
+
+                # Reject entries that could escape the target prefix (zip slip):
+                # an absolute path or a ".." segment makes os.path.join below
+                # discard parent_dir entirely and write outside the intended prefix.
+                normalized = filename.replace("\\", "/")
+                if normalized.startswith("/") or ".." in normalized.split("/"):
+                    print(f"Skipping unsafe zip entry: {filename}")
+                    continue
+
                 # Construct target key
                 zip_name_no_ext = os.path.splitext(os.path.basename(key))[0]
                 parent_dir = os.path.dirname(key)

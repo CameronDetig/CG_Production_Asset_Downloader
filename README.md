@@ -9,8 +9,16 @@ This script is not affiliated with Blender or Blender Studio. All assets downloa
 ## Usage
 
 1. Copy `.env.example` to `.env` and set `USER_COOKIE` there (see the screenshot below for how to find it). `.env` is gitignored, so it never gets committed.
-2. Set the GALLERY_URL to the gallery you want to download assets from.
-3. Set the DOWNLOAD_DIR to the directory you want to download assets to.
-4. Run the script.
+2. Run the script, passing the gallery URL you want to download assets from:
+
+```
+python download_assets.py https://studio.blender.org/projects/<project>/<gallery-id>/
+```
+
+By default assets are saved to `cg-production-data/<project-name>/`. Pass `--dir` to save somewhere else:
+
+```
+python download_assets.py https://studio.blender.org/projects/<project>/<gallery-id>/ --dir "cg-production-data/shows/caminandes_llamigos/vr_demo/"
+```
 
 ![USER_COOKIE](images/user_cookie.png)

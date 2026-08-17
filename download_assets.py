@@ -1,3 +1,4 @@
+import argparse
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -19,11 +20,6 @@ if not USER_COOKIE:
     sys.exit(1)
 
 BASE_URL = "https://studio.blender.org"
-# User requested URL
-GALLERY_URL = "https://studio.blender.org/projects/caminandes-3/574c4c58c379cf189c1fa1c4/"
-# Automatically extract project name from GALLERY_URL
-PROJECT_NAME = GALLERY_URL.split('/projects/')[1].split('/')[0]
-DOWNLOAD_DIR = "cg-production-data/shows/caminandes_llamigos/vr_demo/"
 
 def get_soup(url, session):
     try:
@@ -59,7 +55,7 @@ def download_file(url, session, output_dir, filename=None):
     except Exception as e:
         print(f"  [Error] Failed to download {url}: {e}")
 
-def visit_gallery(url, session, current_path, visited):
+def visit_gallery(url, session, current_path, visited, project_name):
     if url in visited:
         print(f"  [Skipping] Already visited {url}")
         return
@@ -120,7 +116,7 @@ def visit_gallery(url, session, current_path, visited):
         # Check if it looks like a project gallery link
         # Recursion logic: if it starts with /projects/spring/ and not 'gallery' (if avoiding main gallery)
         # But wait, original request was a sub-page.
-        if f'/projects/{PROJECT_NAME}/' in full_folder_url and 'download-source' not in full_folder_url:
+        if f'/projects/{project_name}/' in full_folder_url and 'download-source' not in full_folder_url:
              # Try to get a folder name
              title_el = card.find(class_='cards-item-title')
              folder_name = title_el.get_text(strip=True) if title_el else link.get_text(strip=True)
@@ -132,9 +128,25 @@ def visit_gallery(url, session, current_path, visited):
              # Avoid re-visiting parent or self (handled by visited set but good to check)
              print(f"    Found folder: {clean_name} -> {href}")
              new_path = os.path.join(current_path, clean_name)
-             visit_gallery(full_folder_url, session, new_path, visited)
+             visit_gallery(full_folder_url, session, new_path, visited, project_name)
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Batch download assets from a Blender Studio gallery.")
+    parser.add_argument("gallery_url", help="URL of the Blender Studio project gallery to download, e.g. https://studio.blender.org/projects/<project>/<gallery-id>/")
+    parser.add_argument("--dir", dest="download_dir", default=None,
+                         help="Directory to save downloaded assets to (default: cg-production-data/<project-name>/)")
+    return parser.parse_args()
 
 def main():
+    args = parse_args()
+    gallery_url = args.gallery_url
+
+    if '/projects/' not in gallery_url:
+        print(f"Error: GALLERY_URL must contain '/projects/<name>/', got: {gallery_url}")
+        sys.exit(1)
+    project_name = gallery_url.split('/projects/')[1].split('/')[0]
+    download_dir = args.download_dir or f"cg-production-data/{project_name}/"
+
     print("Starting script...")
     session = requests.Session()
     session.headers.update({
@@ -142,11 +154,11 @@ def main():
         'Cookie': USER_COOKIE
     })
 
-    if not os.path.exists(DOWNLOAD_DIR):
-        os.makedirs(DOWNLOAD_DIR)
+    if not os.path.exists(download_dir):
+        os.makedirs(download_dir)
 
     visited = set()
-    visit_gallery(GALLERY_URL, session, DOWNLOAD_DIR, visited)
+    visit_gallery(gallery_url, session, download_dir, visited, project_name)
     print("Script finished.")
 
 if __name__ == "__main__":

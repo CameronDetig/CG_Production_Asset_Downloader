@@ -11,9 +11,30 @@ The production files from Blender Studio are often zipped, and to cut down on th
 
 - Go to IAM > Roles > Create Role
 - Under use case, select AWS Service > Lambda
-- Attach permissions: S3FullAccess
+- Skip attaching a managed policy for now (don't use S3FullAccess. It grants access to every bucket in the account, so a bug in the function could read/write/delete objects anywhere)
 - Name: LambdaUnzipS3FilesRole
 - Create Role
+- After creating the role, add an inline policy scoped to just this bucket instead:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+            "Resource": "arn:aws:s3:::YOUR-BUCKET-NAME/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::YOUR-BUCKET-NAME"
+        }
+    ]
+}
+```
+
+Replace `YOUR-BUCKET-NAME` with the actual bucket, and also attach the AWS-managed `AWSLambdaBasicExecutionRole` policy so the function can write CloudWatch logs.
 
 2. Create a Lambda Function:
 
