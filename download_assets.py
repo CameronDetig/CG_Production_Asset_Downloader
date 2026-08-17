@@ -3,15 +3,20 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import sys
+from dotenv import load_dotenv
 
+load_dotenv()
 
-# Go to the blender studio website. 
+# Go to the blender studio website.
 # Open developer tools (F12)
 # Go to the network tab
 # refresh the page
 # Click on the first request
-# Copy the cookie
-USER_COOKIE = "REDACTED_SESSION_COOKIE"
+# Copy the cookie into USER_COOKIE in your .env file (copy .env.example to .env first)
+USER_COOKIE = os.environ.get("USER_COOKIE")
+if not USER_COOKIE:
+    print("Error: USER_COOKIE is not set. Copy .env.example to .env and fill in USER_COOKIE.")
+    sys.exit(1)
 
 BASE_URL = "https://studio.blender.org"
 # User requested URL

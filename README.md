@@ -8,7 +8,7 @@ This script is not affiliated with Blender or Blender Studio. All assets downloa
 
 ## Usage
 
-1. Follow the instructions in download_assets.py to set the USER_COOKIE.
+1. Copy `.env.example` to `.env` and set `USER_COOKIE` there (see the screenshot below for how to find it). `.env` is gitignored, so it never gets committed.
 2. Set the GALLERY_URL to the gallery you want to download assets from.
 3. Set the DOWNLOAD_DIR to the directory you want to download assets to.
 4. Run the script.
